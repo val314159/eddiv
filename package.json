@@ -1,0 +1,12 @@
+{
+    "name":"eddiv",
+    "version": "0.0.0",
+    "scripts":{
+	"test":"node eddiv_test.js"
+    },
+    "readmeFilename": "README.md",
+    "repository": {
+	"type": "git",
+	"url": "git+https://github.com/val314159/eel-parser.git"
+    }
+}
