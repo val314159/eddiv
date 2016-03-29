@@ -1,66 +1,50 @@
 //if(!global.print)print=console.log;
 str=JSON.stringify;
 print=console.log.bind(console);
-function insertTextAtCursor(text,elt) {
-    var sel, range, html;
-    sel = window.getSelection();
-    if (sel.getRangeAt && sel.rangeCount) {
-	print("x1");
-	range = sel.getRangeAt(0);
-	print("x2 r=", range);
-	var caret = range.startOffset;
-	print("x3 c=", caret);
-	range.startOffset = caret;
-	range.endOffset = caret;
-	print("x4");
-	range.setStart(range.startContainer,caret);
-	range.setEnd(range.endContainer,caret);
-	//range.startOffset = caret+2;
-	//range.endOffset = caret+2;
-	print("x5");
-	
-	/*
-	range.deleteContents();
-	print(str(elt.innerHTML.substr(0,caret)));
-	print(str(elt.innerHTML.substr(caret)));
-	//range.insertNode( document.createTextNode(text) );
-	elt.focus();
-	sel = window.getSelection();
-	range = sel.getRangeAt(0);
-	print("CARET:",caret);
-	print("CARET:",elt.innerHTML.length);
-	print("CARET:",caret>0);
-	range.setStart(elt,caret);
-	range.setEnd  (elt,caret);
-*/
-	print("x9");
-	return caret;
-    }
-}
-function eddiv(elt,filename){
-    if(typeof(elt)=='string')
-	elt=document.getElementById(elt);
+function insertEnter(elt){
+    selection = window.getSelection();
+    range = selection.getRangeAt(0);
+    var offset = range.startOffset;
+    var html = elt.innerHTML;
+    elt.innerHTML = insert("\n",html,offset);
+    setTimeout(function(){
+	selection = window.getSelection();
+	range = selection.getRangeAt(0);
+	selection.extend(range.startContainer,offset+1);
+	selection.collapseToEnd();
+    },0);
+    return false;}
+function eddiv(){
     var self=Object.create(eddiv.prototype);
-    self.elt=elt;
-    self.filename=filename;
-    self.text=elt.innerHTML;
-    print("TEXT=["+JSON.stringify(self.text)+"]");
-    elt.contentEditable=true;
-    elt.onkeydown=function(e){
-	console.log("ON KEY DOWN", e);
-	if(e.keyIdentifier==='Enter'){
-	    insertTextAtCursor("\n",elt);
-	    return false;
-	}
-    };
+    self.init.apply(self,arguments);
     return self;
 }
-eddiv.prototype.setText=function(text){ this.innerHTML = this.text = text; };
-eddiv.prototype.getText=function(){
-    return this.elt.innerHTML;
-    return this.text;
+eddiv.prototype.init=function(elt,filename){
+    if(typeof(elt)=='string')
+	elt=document.getElementById(elt);
+    this.elt=elt;
+    this.filename=filename;
+    this.text=elt.innerHTML;
+    elt.contentEditable=true;
+    elt.onkeydown=function(e){
+	var code = e.keyCode || e.charCode;
+	if (code===13) return insertEnter(elt);};
 };
+eddiv.prototype.setText=function(text){this.innerHTML=this.text=text;};
+eddiv.prototype.getText=function(){ return this.elt.innerHTML;}
+eddiv.prototype.dump = function(){ print("getText()=>",str(D.getText())); }
+eddiv.prototype.save = function(){//save (browser?)
+    if(this.filename){
+	var txt = ""+D.getText();
+	$.ajax(this.filename,{ method:"PUT", data: txt
+	}).then(function(){  print("SYEAHHHH!!!!!!!");
+	}).then(null,function(){ print("SNOOOOOO!!!!!!!");});
+    }}
+eddive.prototype.load=function(){//load (browser?)
+    if(this.filename){
+	$.ajax(this.filename,{ method:"GET"
+	}).then(function(d){ print("LYEAHHHH!!!!!!!");  D.setText(d);
+	}).then(null,function(){  print("LNOOOOOO!!!!!!!");
+	});
+    }}
 try{module.exports=eddiv;}catch(e){}
-function b1(){ print("getText()=>",str(D.getText())); }
-function b2(){
-}
