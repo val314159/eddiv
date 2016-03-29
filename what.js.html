@@ -1,0 +1,39 @@
+/*<br>
+<pre id="e">hello there</pre>
+<button onclick=bump()>bump</button>
+<hr>*///<script>
+var elt=document.getElementById('e');
+str=JSON.stringify;
+print=console.log.bind(console);
+function bump(){
+    print("XX",(elt.innerHTML));
+}
+elt.contentEditable=true;
+elt.focus();
+elt.onkeydown=function(e){
+    var code = e.keyCode || e.charCode;
+    if (code===13){
+	Enter();
+	return false;
+    }
+};
+function Enter(){
+    selection = window.getSelection();
+    range = selection.getRangeAt(0);
+    var offset = range.startOffset;
+    var html=elt.innerHTML;
+    elt.innerHTML=
+	(html.substr(0,offset)+"\n"+
+	 html.substr(offset));
+    elt.focus();
+    setTimeout(function(){
+	selection = window.getSelection();
+	range = selection.getRangeAt(0);
+	selection.extend(range.startContainer,offset+1);
+	selection.collapseToEnd();
+    },5);
+};
+//</script>
+
+
+
