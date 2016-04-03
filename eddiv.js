@@ -6,6 +6,26 @@ Mousetrap.bind("ctrl+x ctrl+s",function(e){
     print("C-x C-s");
     return false;
 });
+Mousetrap.bind("command+s",function(e){
+    print("Command-s");
+    return false;
+});
+Mousetrap.bind("ctrl+x ctrl+f",function(e){
+    print("C-x C-f");
+    return false;
+});
+Mousetrap.bind("ctrl+x o",function(e){
+    print("C-x o");
+    return false;
+});
+Mousetrap.bind("ctrl+x 0",function(e){
+    print("C-x 0");
+    return false;
+});
+Mousetrap.bind("ctrl+x 2",function(e){
+    print("C-x 2");
+    return false;
+});
 Mousetrap.bind("escape :",function(e){
     print("M-:");
     return false;
