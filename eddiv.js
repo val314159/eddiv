@@ -1,6 +1,8 @@
 var Hyper=false, Super=false;
 function key2str(e,lbl){
     var keyId=e.keyIdentifier;
+    if (keyId < "U+00FF")
+	keyId = String.fromCharCode(parseInt(keyId.substr(3),16));
     if     (keyId==='Shift')  return;
     else if(keyId==='Control')return;
     else if(keyId==='Alt') {if(!(e.location===1))Hyper=true;return}
