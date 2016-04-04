@@ -1,43 +1,25 @@
-Mousetrap.bind("escape x",function(e){
-    print("M-x");
-    return false;
-});
-Mousetrap.bind("ctrl+x ctrl+s",function(e){
-    print("C-x C-s");
-    return false;
-});
-Mousetrap.bind("command+s",function(e){
-    print("Command-s");
-    return false;
-});
-Mousetrap.bind("ctrl+x ctrl+f",function(e){
-    print("C-x C-f");
-    return false;
-});
-Mousetrap.bind("ctrl+x o",function(e){
-    print("C-x o");
-    return false;
-});
-Mousetrap.bind("ctrl+x 0",function(e){
-    print("C-x 0");
-    return false;
-});
-Mousetrap.bind("ctrl+x 2",function(e){
-    print("C-x 2");
-    return false;
-});
-Mousetrap.bind("escape :",function(e){
-    print("M-:");
-    return false;
-});
-Mousetrap.bind("escape !",function(e){
-    print("M-!");
-    return false;
-});
-function onkeydown(e){
-    var code = e.keyCode || e.charCode;
-    if (code===13){
-	var selection = window.getSelection();
+var Hyper=false, Super=false;
+function key2str(e,lbl){
+    var keyId=e.keyIdentifier;
+    if     (keyId==='Shift')  return;
+    else if(keyId==='Control')return;
+    else if(keyId==='Alt') {if(!(e.location===1))Hyper=true;return}
+    else if(keyId==='Meta'){if(!(e.location===1))Super=true;return}
+    if(e.ctrlKey) keyId="C-"+keyId;
+    if(e.metaKey) keyId="M-"+keyId;
+    if(e.altKey)  keyId="A-"+keyId;
+    if(Hyper)     keyId="H-"+keyId;
+    if(Super)     keyId="s-"+keyId;
+    Super = Hyper = false;
+    console.log([lbl,"KEY 99 STR",keyId,e.location]);
+    return keyId;}
+function onkeypress(e){}// key2str(e,"PRESS")}
+function onkeyup   (e){}// key2str(e,"UP")}
+function onkeydown (e){key2str(e,"DOWN");return false;}
+		      //var code = e.keyCode || e.charCode;
+		      //print(JSON.stringify(e));
+    /*if (code===13){
+      var selection = window.getSelection();
 	var range = selection.getRangeAt(0);
 	var offset = range.startOffset;
 	this.innerHTML=(this.innerHTML.substr(0,offset)+"\n"+
@@ -47,9 +29,7 @@ function onkeydown(e){
 	    range = selection.getRangeAt(0);
 	    selection.extend(range.startContainer,offset+1);
 	    selection.collapseToEnd();
-	},0)
-	return false}}
-Mousetrap.bind("enter",onkeydown);
+	},0)return false}}*/
 function eddiv(elt,url){
     if(typeof(elt)==='string') elt=document.getElementById(elt);
     elt.contentEditable=true; elt.focus();
@@ -57,7 +37,8 @@ function eddiv(elt,url){
 eddiv.prototype.getText=function( ){ return this.elt.innerHTML }
 eddiv.prototype.setText=function(t){ this.elt.innerHTML = t }
 print=function(){
-    document.body.appendChild(document.createTextNode(""+JSON.stringify(arguments)));
+    document.body.appendChild(document.createTextNode(
+	""+JSON.stringify(arguments)));
     document.body.appendChild(document.createElement("br"));
 }
 eddiv.prototype.dump=function(){ console.log(">>",this.getText());
