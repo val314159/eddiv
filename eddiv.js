@@ -1,8 +1,11 @@
 var Hyper=false, Super=false;
 function key2str(e,lbl){
     var keyId=e.keyIdentifier;
-    if (keyId < "U+00FF")
-	keyId = String.fromCharCode(parseInt(keyId.substr(3),16));
+    if (keyId=== undefined)return"";
+    if (keyId == "U+001B"){return "ESC"}
+    if (keyId == "U+0009"){keyId=(e.shiftKey)?"<backtab>":"<tab>"}
+    if (keyId >= "U+0000" && keyId < "U+00FF")
+	keyId = String.fromCharCode(parseInt(keyId.substr(3),16)).toLowerCase()
     if     (keyId==='Shift')  return;
     else if(keyId==='Control')return;
     else if(keyId==='Alt') {if(!(e.location===1))Hyper=true;return}
@@ -15,9 +18,49 @@ function key2str(e,lbl){
     Super = Hyper = false;
     console.log([lbl,"KEY 99 STR",keyId,e.location]);
     return keyId;}
-function onkeypress(e){}// key2str(e,"PRESS")}
-function onkeyup   (e){}// key2str(e,"UP")}
-function onkeydown (e){key2str(e,"DOWN");return false;}
+function onkeypress(e){}
+function onkeyup   (e){}
+var prefix = "";
+function onkeydown (e){
+    var lbl=key2str(e,"DOWN");
+    if (lbl==='C-x'){
+	prefix = prefix + " " + lbl;
+	console.log("PREFIX:"+prefix);
+	return false;
+    } else if (lbl==='C-a'){
+	prefix = prefix + " " + lbl;
+	console.log("PREFIX:"+prefix);
+	return false;
+    } else if (lbl==='C-e'){
+	prefix = prefix + " " + lbl;
+	console.log("PREFIX:"+prefix);
+	return false;
+    } else if (lbl==='C-s'){
+	prefix = prefix + " " + lbl;
+	console.log("PREFIX:"+prefix);
+	return false;
+    } else if (lbl==='C-g'){
+	prefix = prefix + " " + lbl;
+	console.log("PREFIX:"+prefix);
+	return false;
+    } else if (lbl==='C-c'){
+	prefix = prefix + " " + lbl;
+	console.log("PREFIX:"+prefix);
+	return false;
+    } else if (lbl==='<tab>'||lbl==='<backtab>'){
+	prefix = prefix + " " + lbl;
+	console.log("PREFIX:"+prefix);
+	return false;
+    } else if (lbl==='ESC'){
+	prefix = prefix + " " + lbl;
+	console.log("PREFIX:"+prefix);
+	return false;
+    }
+    if(prefix){
+	console.log("KEY COMBO UNKNOWN!!! " + prefix + " " + lbl);
+    }
+    prefix="";
+}
 		      //var code = e.keyCode || e.charCode;
 		      //print(JSON.stringify(e));
     /*if (code===13){
